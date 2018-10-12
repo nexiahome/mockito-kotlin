@@ -1,0 +1,1 @@
+tag with git, then:  ./gradlew clean test publish -PisRelease=true
