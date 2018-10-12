@@ -1,6 +1,8 @@
 apply plugin: 'signing'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'maven-publish'
+apply plugin: 'application'
 
 group = 'com.nhaarman'
 version = rootProject.ext.versionName
@@ -86,6 +88,54 @@ bintray {
                 user = hasProperty('sonatype_username') ? sonatype_username : System.getenv('SONATYPE_USERNAME')
                 password = hasProperty('sonatype_password') ? sonatype_password : System.getenv('SONATYPE_PASSWORD')
                 close = '1'
+            }
+        }
+    }
+}
+
+project.ext {
+    artifactoryRepo = project.properties.containsKey("releaseVersion") ? "libs-release-local" : "libs-release-local"
+}
+
+publishing.repositories {
+    maven {
+        credentials {
+            username "${artifactory_user}"
+            password "${artifactory_password}"
+        }
+        url "${artifactory_url}/${artifactoryRepo}"
+    }
+}
+
+publishing.publications {
+    myPublication(MavenPublication) {
+        from components.java
+        artifact sourcesJar
+        pom {
+            name = 'mockito-kotlin'
+            packaging = 'jar'
+            description = 'Using Mockito with Kotlin.'
+            url = 'https://github.com/nexiahome/mockito-kotlin'
+
+            scm {
+                url = 'scm:git@github.com:nexiahome/mockito-kotlin.git'
+                connection = 'scm:git@github.com:nexiahome/mockito-kotlin.git'
+                developerConnection = 'scm:git@github.com:nexiahome/mockito-kotlin.git'
+            }
+
+            licenses {
+                license {
+                    name = 'MIT'
+                    url = 'https://opensource.org/licenses/MIT'
+                    distribution = 'repo'
+                }
+            }
+
+            developers {
+                developer {
+                    id = 'nhaarman'
+                    name = 'Niek Haarman'
+                }
             }
         }
     }
