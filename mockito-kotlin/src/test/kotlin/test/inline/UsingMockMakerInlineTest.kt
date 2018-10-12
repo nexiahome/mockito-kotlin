@@ -24,7 +24,6 @@
 
 import com.nhaarman.expect.expect
 import com.nhaarman.mockito_kotlin.*
-import com.nhaarman.mockito_kotlin.createinstance.InstanceCreator
 import com.nhaarman.mockito_kotlin.createinstance.mockMakerInlineEnabled
 import org.junit.Assume.assumeTrue
 import org.junit.Before
@@ -43,8 +42,6 @@ class UsingMockMakerInlineTest {
             return value.plus(BigInteger.ONE)
         }
     }
-
-    private inline fun <reified T : Any> createInstance() = InstanceCreator().createInstance(T::class)
 
     @Before
     fun setup() {
@@ -109,50 +106,9 @@ class UsingMockMakerInlineTest {
         }
     }
 
-    @Test
-    fun createPrimitiveInstance() {
-        /* When */
-        val i = createInstance<Int>()
-
-        /* Then */
-        expect(i).toBe(0)
-    }
-
-    @Test
-    fun createStringInstance() {
-        /* When */
-        val s = createInstance<String>()
-
-        /* Then */
-        expect(s).toBe("")
-    }
-
-    @Test
-    fun sealedMemberClass() {
-        /* When */
-        val result = createInstance<MySealedClass>()
-
-        /* Then */
-        expect(result).toNotBeNull()
-    }
-
-    @Test
-    fun sealedClassMember() {
-        /* When */
-        val result = createInstance<MySealedClass.MySealedClassMember>()
-
-        /* Then */
-        expect(result).toNotBeNull()
-    }
-
     interface Methods {
-
         fun throwableClass(t: ThrowableClass)
     }
 
     class ThrowableClass(cause: Throwable) : Throwable(cause)
-
-    sealed class MySealedClass {
-        class MySealedClassMember : MySealedClass()
-    }
 }

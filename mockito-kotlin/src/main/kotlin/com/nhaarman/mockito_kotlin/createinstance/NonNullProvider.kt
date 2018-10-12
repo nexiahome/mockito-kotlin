@@ -8,7 +8,7 @@ interface NonNullProvider {
     fun <T : Any> createInstance(kClass: KClass<T>): T
 }
 
-fun nonNullProvider(): NonNullProvider = NonNullProviderImpl(listOf(NullCaster(), InstanceCreator()))
+fun nonNullProvider(): NonNullProvider = NonNullProviderImpl(listOf(NullCaster()))
 
 internal class NonNullProviderImpl(
         private val nonNullProviders: List<NonNullProvider>
